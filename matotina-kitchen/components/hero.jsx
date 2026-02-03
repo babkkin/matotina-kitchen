@@ -1,4 +1,5 @@
 import Image from "next/image";
+import hero from "@/app/public/pictures/hero.jpg";
 
 export default function Hero() {
   return (
@@ -6,7 +7,7 @@ export default function Hero() {
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
-          src="/images/hero.jpg"
+          src={hero}
           alt="Catering"
           fill
           className="object-cover"

@@ -2,6 +2,7 @@ import Image from "next/image";
 import appetizer from "@/app/public/pictures/appetizer.png";
 import main from "@/app/public/pictures/main.png";
 import dessert from "@/app/public/pictures/dessert.jpg";
+
 export default function Menu() {
   const menuItems = [
     {
