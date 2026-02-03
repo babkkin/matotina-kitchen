@@ -10,12 +10,12 @@ export default function Header() {
     <header className="bg-white shadow-md px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Logo */}
-        <h1 className="text-xl font-bold">
+        <h1 className="text-xl text-slate-800 font-bold">
           Matotina&apos;s Kitchen
         </h1>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-6">
+        <nav className="hidden md:flex gap-6 text-slate-800 font-bold">
           <Link href="/">Home</Link>
           <Link href="/services">Services</Link>
           <Link href="/menu">Menu</Link>

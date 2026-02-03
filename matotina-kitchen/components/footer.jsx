@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-slate-900 to-slate-950 text-gray-300">
+    <footer className="bg-linear-to-b from-slate-900 to-slate-950 text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-12">
 
         {/* Top section */}
@@ -12,7 +12,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <h2 className="text-white text-xl font-semibold mb-4">
-              Matotina's Kitchen
+              Matotina&apos;s Kitchen
             </h2>
             <p className="text-sm text-gray-400">
               Creating unforgettable culinary experiences
@@ -41,20 +41,20 @@ export default function Footer() {
                 </h3>
                 <div className="flex gap-4 text-xl">
                     <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                    <FaFacebookF />
+                    <Facebook />
                     </a>
                     <a href="https://www.instagram.com/YourPage" target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                    <FaInstagram />
+                    <Instagram />
                     </a>
                     <a href="https://twitter.com/YourPage" target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                    <FaTwitter />
+                    <Twitter />
                     </a>
                 </div>
             </div>
         </div>
         {/* Divider */}
         <div className="border-t border-slate-800 mt-10 pt-6 text-center text-sm text-gray-400">
-          © 2024 Gourmet Catering. All rights reserved.
+          © 2026 Matotina&apos;s Kitchen. All rights reserved.
         </div>
       </div>
     </footer>

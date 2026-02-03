@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         <Header />
 
         {/* Page Content */}
-        <main className="flex-grow">
+        <main className="grow">
           {children}
         </main>
 
