@@ -144,16 +144,16 @@ export default function Contact() {
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-2xl mb-6">Contact Information</h3>
+              <h3 className="text-2xl mb-6 text-gray-600">Contact Information</h3>
               
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
                   <MapPin className="w-6 h-6 text-gray-900 mt-1" />
                   <div>
-                    <div className="font-medium mb-1">Address</div>
+                    <div className="font-medium mb-1 text-gray-600">Address</div>
                     <div className="text-gray-600">
-                      123 Culinary Avenue<br />
-                      New York, NY 10001
+                      Km. 30 National Road<br />
+                      Tunasan, Muntinlupa City
                     </div>
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export default function Contact() {
                 <div className="flex items-start space-x-4">
                   <Phone className="w-6 h-6 text-gray-900 mt-1" />
                   <div>
-                    <div className="font-medium mb-1">Phone</div>
+                    <div className="font-medium mb-1 text-gray-600">Phone</div>
                     <div className="text-gray-600">(555) 123-4567</div>
                   </div>
                 </div>
@@ -169,15 +169,15 @@ export default function Contact() {
                 <div className="flex items-start space-x-4">
                   <Mail className="w-6 h-6 text-gray-900 mt-1" />
                   <div>
-                    <div className="font-medium mb-1">Email</div>
-                    <div className="text-gray-600">info@gourmetcatering.com</div>
+                    <div className="font-medium mb-1 text-gray-600">Email</div>
+                    <div className="text-gray-600">info@matotinaskitchen.com</div>
                   </div>
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="text-2xl mb-4">Business Hours</h3>
+              <h3 className="text-2xl mb-4 text-gray-600">Business Hours</h3>
               <div className="space-y-2 text-gray-600">
                 <div className="flex justify-between">
                   <span>Monday - Friday:</span>

@@ -33,15 +33,15 @@ export default function About() {
             
             <div className="grid grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-4xl mb-2">15+</div>
+                <div className="text-4xl mb-2 text-gray-600">15+</div>
                 <div className="text-gray-600">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl mb-2">500+</div>
+                <div className="text-4xl mb-2 text-gray-600">500+</div>
                 <div className="text-gray-600">Events Catered</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl mb-2">100%</div>
+                <div className="text-4xl mb-2 text-gray-600">100%</div>
                 <div className="text-gray-600">Satisfaction</div>
               </div>
             </div>

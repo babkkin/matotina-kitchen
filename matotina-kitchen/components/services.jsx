@@ -28,7 +28,7 @@ export default function Services() {
     <section id="services" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl mb-4">Our Services</h2>
+          <h2 className="text-4xl md:text-5xl mb-4 text-gray-600">Our Services</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             We cater to all types of events with professionalism and culinary excellence
           </p>
@@ -42,7 +42,7 @@ export default function Services() {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
                   <Icon className="w-8 h-8 text-gray-900" />
                 </div>
-                <h3 className="text-xl mb-3">{service.title}</h3>
+                <h3 className="text-xl mb-3 text-gray-600">{service.title}</h3>
                 <p className="text-gray-600">{service.description}</p>
               </div>
             );
