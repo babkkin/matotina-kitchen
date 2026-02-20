@@ -40,7 +40,7 @@ export default function Footer() {
                     Follow Us
                 </h3>
                 <div className="flex gap-4 text-xl">
-                    <a href="https://www.facebook.com/YourPage" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                    <a href="https://www.facebook.com/adrianbenedict.cuartero.3" target="_blank" rel="noopener noreferrer" className="hover:text-white">
                     <Facebook />
                     </a>
                     <a href="https://www.instagram.com/YourPage" target="_blank" rel="noopener noreferrer" className="hover:text-white">
