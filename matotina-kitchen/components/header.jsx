@@ -4,11 +4,24 @@ import { useState } from "react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+
+  const handleTitleClick = () => {
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+    if (newCount === 13) {
+      setClickCount(0);
+      window.location.href = "/admin-13/login";
+    }
+  };
 
   return (
     <header className="bg-white shadow-md px-6 py-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl text-slate-800 font-bold">
+        <h1
+          className="text-xl text-slate-800 font-bold cursor-pointer select-none"
+          onClick={handleTitleClick}
+        >
           Matotina&apos;s Kitchen
         </h1>
 
