@@ -3,37 +3,27 @@
 import { useState, useEffect } from "react";
 
 export default function AdminLogin() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername]     = useState("");
+  const [password, setPassword]     = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [error, setError]           = useState("");
+  const [loading, setLoading]       = useState(false);
+  const [mounted, setMounted]       = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-
       const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.message || "Invalid credentials.");
-        setLoading(false);
-        return;
-      }
-
+      if (!res.ok) { setError(data.message || "Invalid credentials."); setLoading(false); return; }
       window.location.href = "/admin-13/dashboard";
     } catch {
       setError("Something went wrong. Please try again.");
@@ -44,300 +34,112 @@ export default function AdminLogin() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        .admin-root {
+        .login-root {
           min-height: 100vh;
-          background: #0f0d0b;
+          background: #0a0a0f;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           position: relative;
           overflow: hidden;
         }
-
-        .bg-texture {
+        .login-glow {
           position: absolute;
-          inset: 0;
-          background-image:
-            radial-gradient(ellipse 80% 60% at 10% 90%, rgba(180,120,60,0.12) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 50% at 90% 10%, rgba(180,120,60,0.08) 0%, transparent 60%);
+          width: 600px; height: 600px;
+          background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+          top: -100px; left: 50%;
+          transform: translateX(-50%);
+          pointer-events: none;
         }
-
-        .grid-lines {
-          position: absolute;
-          inset: 0;
-          background-image:
-            linear-gradient(rgba(180,120,60,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(180,120,60,0.04) 1px, transparent 1px);
-          background-size: 48px 48px;
+        .login-grid {
+          position: absolute; inset: 0;
+          background-image: linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+          background-size: 40px 40px;
         }
-
-        .card {
+        .login-card {
           position: relative;
-          width: 100%;
-          max-width: 420px;
+          width: 100%; max-width: 420px;
           margin: 24px;
-          background: rgba(20,17,14,0.92);
-          border: 1px solid rgba(180,120,60,0.25);
-          border-radius: 2px;
-          padding: 52px 44px 44px;
-          box-shadow:
-            0 0 0 1px rgba(180,120,60,0.06),
-            0 32px 80px rgba(0,0,0,0.6),
-            inset 0 1px 0 rgba(180,120,60,0.1);
+          background: #111118;
+          border: 1px solid rgba(59,130,246,0.2);
+          border-radius: 8px;
+          padding: 48px 40px 40px;
+          box-shadow: 0 0 0 1px rgba(59,130,246,0.05), 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
           opacity: ${mounted ? 1 : 0};
           transform: ${mounted ? "translateY(0)" : "translateY(16px)"};
-          transition: opacity 0.6s ease, transform 0.6s ease;
+          transition: opacity 0.5s ease, transform 0.5s ease;
         }
-
-        .corner {
-          position: absolute;
-          width: 14px;
-          height: 14px;
-          border-color: rgba(180,120,60,0.5);
-          border-style: solid;
+        .login-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+          text-transform: uppercase; color: #3b82f6;
+          border: 1px solid rgba(59,130,246,0.25);
+          padding: 4px 10px; border-radius: 20px; margin-bottom: 20px;
         }
-        .corner-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-        .corner-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-        .corner-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-        .corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-        .badge {
-          display: inline-block;
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: rgba(180,120,60,0.7);
-          border: 1px solid rgba(180,120,60,0.2);
-          padding: 4px 10px;
-          margin-bottom: 20px;
-          border-radius: 1px;
+        .login-badge-dot { width: 5px; height: 5px; background: #3b82f6; border-radius: 50%; }
+        .login-title { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+        .login-sub { font-size: 13px; color: #6b7280; margin-bottom: 32px; }
+        .login-divider { width: 32px; height: 2px; background: #3b82f6; border-radius: 2px; margin-bottom: 32px; }
+        .login-field { margin-bottom: 18px; }
+        .login-label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px; }
+        .login-input-wrap { position: relative; }
+        .login-input {
+          width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 6px; padding: 12px 16px; font-size: 14px; font-family: 'Inter', sans-serif;
+          color: #ffffff; outline: none; transition: border-color 0.2s, background 0.2s;
         }
-
-        .title {
-          font-family: 'Playfair Display', serif;
-          font-size: 28px;
-          font-weight: 700;
-          color: #f0e8d8;
-          line-height: 1.2;
-          margin-bottom: 6px;
+        .login-input::placeholder { color: #4b5563; }
+        .login-input:focus { border-color: rgba(59,130,246,0.6); background: rgba(59,130,246,0.05); }
+        .login-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6b7280; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; letter-spacing: 0.05em; padding: 4px; transition: color 0.2s; }
+        .login-toggle:hover { color: #3b82f6; }
+        .login-error { font-size: 12px; color: #f87171; margin-bottom: 16px; padding: 10px 14px; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); border-radius: 6px; }
+        .login-btn {
+          width: 100%; padding: 13px;
+          background: #3b82f6; border: none;
+          color: #ffffff; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+          letter-spacing: 0.02em; cursor: pointer; border-radius: 6px;
+          transition: background 0.2s, transform 0.1s; margin-top: 8px;
         }
-
-        .subtitle {
-          font-size: 13px;
-          color: rgba(240,232,216,0.35);
-          font-weight: 300;
-          margin-bottom: 36px;
-          letter-spacing: 0.01em;
-        }
-
-        .divider {
-          width: 32px;
-          height: 1px;
-          background: rgba(180,120,60,0.4);
-          margin-bottom: 32px;
-        }
-
-        .field {
-          margin-bottom: 20px;
-        }
-
-        .label {
-          display: block;
-          font-size: 11px;
-          font-weight: 500;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: rgba(240,232,216,0.45);
-          margin-bottom: 8px;
-        }
-
-        .input-wrap {
-          position: relative;
-        }
-
-        .input {
-          width: 100%;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(180,120,60,0.2);
-          border-radius: 1px;
-          padding: 12px 16px;
-          font-size: 14px;
-          font-family: 'DM Sans', sans-serif;
-          color: #f0e8d8;
-          outline: none;
-          transition: border-color 0.2s, background 0.2s;
-        }
-
-        .input::placeholder { color: rgba(240,232,216,0.2); }
-
-        .input:focus {
-          border-color: rgba(180,120,60,0.55);
-          background: rgba(180,120,60,0.04);
-        }
-
-        .toggle-pw {
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: none;
-          border: none;
-          color: rgba(240,232,216,0.3);
-          cursor: pointer;
-          font-size: 13px;
-          padding: 4px;
-          transition: color 0.2s;
-        }
-        .toggle-pw:hover { color: rgba(180,120,60,0.7); }
-
-        .error {
-          font-size: 12px;
-          color: #e07070;
-          margin-bottom: 16px;
-          padding: 10px 14px;
-          background: rgba(224,112,112,0.07);
-          border: 1px solid rgba(224,112,112,0.2);
-          border-radius: 1px;
-          letter-spacing: 0.01em;
-        }
-
-        .btn {
-          width: 100%;
-          padding: 13px;
-          background: rgba(180,120,60,0.15);
-          border: 1px solid rgba(180,120,60,0.45);
-          color: #c8955a;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 13px;
-          font-weight: 500;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          cursor: pointer;
-          border-radius: 1px;
-          transition: background 0.2s, color 0.2s, border-color 0.2s;
-          position: relative;
-          overflow: hidden;
-          margin-top: 8px;
-        }
-
-        .btn:hover:not(:disabled) {
-          background: rgba(180,120,60,0.28);
-          color: #e0aa70;
-          border-color: rgba(180,120,60,0.7);
-        }
-
-        .btn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        .spinner {
-          display: inline-block;
-          width: 12px;
-          height: 12px;
-          border: 1.5px solid rgba(180,120,60,0.3);
-          border-top-color: #c8955a;
-          border-radius: 50%;
-          animation: spin 0.7s linear infinite;
-          margin-right: 8px;
-          vertical-align: middle;
-        }
-
+        .login-btn:hover:not(:disabled) { background: #2563eb; }
+        .login-btn:active:not(:disabled) { transform: scale(0.99); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .login-spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 8px; vertical-align: middle; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        .footer {
-          margin-top: 32px;
-          text-align: center;
-          font-size: 11px;
-          color: rgba(240,232,216,0.2);
-          letter-spacing: 0.08em;
-        }
-
-        .dot {
-          display: inline-block;
-          width: 4px;
-          height: 4px;
-          background: rgba(180,120,60,0.4);
-          border-radius: 50%;
-          margin: 0 8px;
-          vertical-align: middle;
-        }
+        .login-footer { margin-top: 28px; text-align: center; font-size: 11px; color: #374151; letter-spacing: 0.06em; }
       `}</style>
 
-      <div className="admin-root">
-        <div className="bg-texture" />
-        <div className="grid-lines" />
-
-        <div className="card">
-          <div className="corner corner-tl" />
-          <div className="corner corner-tr" />
-          <div className="corner corner-bl" />
-          <div className="corner corner-br" />
-
-          <div className="badge">Restricted Access</div>
-          <h1 className="title">Admin Portal</h1>
-          <p className="subtitle">Matotina&apos;s Kitchen — Staff only</p>
-          <div className="divider" />
+      <div className="login-root">
+        <div className="login-glow" />
+        <div className="login-grid" />
+        <div className="login-card">
+          <div className="login-badge"><span className="login-badge-dot" /> Restricted Access</div>
+          <h1 className="login-title">Admin Portal</h1>
+          <p className="login-sub">Matotina's Kitchen — Staff only</p>
+          <div className="login-divider" />
 
           <form onSubmit={handleLogin}>
-            <div className="field">
-              <label className="label" htmlFor="username">Username</label>
-              <input
-                id="username"
-                className="input"
-                type="text"
-                placeholder="Enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
-                required
-              />
+            <div className="login-field">
+              <label className="login-label">Username</label>
+              <input className="login-input" type="text" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required />
             </div>
-
-            <div className="field">
-              <label className="label" htmlFor="password">Password</label>
-              <div className="input-wrap">
-                <input
-                  id="password"
-                  className="input"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  style={{ paddingRight: "44px" }}
-                  required
-                />
-                <button
-                  type="button"
-                  className="toggle-pw"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label="Toggle password"
-                >
-                  {showPassword ? "hide" : "show"}
-                </button>
+            <div className="login-field">
+              <label className="login-label">Password</label>
+              <div className="login-input-wrap">
+                <input className="login-input" type={showPassword ? "text" : "password"} placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ paddingRight: "52px" }} autoComplete="current-password" required />
+                <button type="button" className="login-toggle" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "hide" : "show"}</button>
               </div>
             </div>
-
-            {error && <div className="error">⚠ {error}</div>}
-
-            <button className="btn" type="submit" disabled={loading}>
-              {loading && <span className="spinner" />}
+            {error && <div className="login-error">⚠ {error}</div>}
+            <button className="login-btn" type="submit" disabled={loading}>
+              {loading && <span className="login-spinner" />}
               {loading ? "Verifying..." : "Sign In"}
             </button>
           </form>
 
-          <div className="footer">
-            <span>Secure Login</span>
-            <span className="dot" />
-            <span>Admin-13</span>
-          </div>
+          <div className="login-footer">Admin-13 · Secure Login</div>
         </div>
       </div>
     </>
