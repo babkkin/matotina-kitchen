@@ -10,7 +10,7 @@ export default function AdminLogin() {
   const [loading, setLoading]       = useState(false);
   const [mounted, setMounted]       = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {setMounted(true); }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -117,7 +117,7 @@ export default function AdminLogin() {
         <div className="login-card">
           <div className="login-badge"><span className="login-badge-dot" /> Restricted Access</div>
           <h1 className="login-title">Admin Portal</h1>
-          <p className="login-sub">Matotina's Kitchen — Staff only</p>
+          <p className="login-sub">Matotina&apos;s Kitchen — Staff only</p>
           <div className="login-divider" />
 
           <form onSubmit={handleLogin}>

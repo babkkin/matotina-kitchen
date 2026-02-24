@@ -25,7 +25,7 @@ export default function Hero() {
           Creating unforgettable culinary experiences for your special events
         </p>
         <a
-          href="/contact"
+          href="#contact"
           className="bg-white text-gray-900 font-semibold px-6 py-3 rounded shadow hover:bg-gray-100 transition"
         >
           Get a Quote
