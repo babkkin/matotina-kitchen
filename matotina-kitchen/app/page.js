@@ -4,6 +4,7 @@ import Menu from "@/components/menu"
 import About from "@/components/about"
 import Contact from "@/components/contact"
 import Header from "@/components/header";
+import ReviewsSection from "@/components/reviews-section"
 export default function Home() {
   return (
     <div className="min-h-screen">
@@ -12,6 +13,7 @@ export default function Home() {
       <Services />
       <Menu />
       <About />
+      <ReviewsSection/>
       <Contact />
     </div>
   );
