@@ -1,22 +1,23 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 const DESC_LIMIT = 120;
+const INTERVAL   = 4000;
 
-function ExpandableDesc({ text }) {
-  const [expanded, setExpanded] = useState(false);
-  const isLong = text && text.length > DESC_LIMIT;
+function ExpandableDesc({ text, expanded, onToggle }) {
+  const isLong    = text && text.length > DESC_LIMIT;
   const displayed = isLong && !expanded ? text.slice(0, DESC_LIMIT).trimEnd() + "…" : text;
   if (!text) return null;
+
   return (
     <p className="text-gray-600 text-sm leading-relaxed">
       {displayed}
       {isLong && (
         <button
-          onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+          onClick={(e) => { e.stopPropagation(); onToggle(); }}
           className="ml-1 text-xs font-semibold text-gray-500 underline underline-offset-2 hover:text-gray-700 bg-transparent border-none cursor-pointer p-0"
         >
           {expanded ? "Less" : "More"}
@@ -27,11 +28,13 @@ function ExpandableDesc({ text }) {
 }
 
 export default function Menu() {
-  const [items, setItems]     = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [current, setCurrent] = useState(0);
-  const [sliding, setSliding] = useState(false);
-  const intervalRef           = useRef(null);
+  const [items, setItems]         = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [current, setCurrent]     = useState(0);
+  const [sliding, setSliding]     = useState(false);
+  const [expanded, setExpanded]   = useState({}); // { [itemId]: boolean }
+  const intervalRef               = useRef(null);
+  const pausedRef                 = useRef(false);
 
   useEffect(() => {
     fetch("/api/menu")
@@ -40,35 +43,45 @@ export default function Menu() {
       .catch(() => setLoading(false));
   }, []);
 
-  // Auto-advance every 4 seconds
-  useEffect(() => {
-    if (items.length <= 1) return;
-    intervalRef.current = setInterval(() => goTo("next"), 4000);
-    return () => clearInterval(intervalRef.current);
-  }, [items, current]);
+  const advance = useCallback(() => {
+    if (pausedRef.current) return;
+    setCurrent((prev) => (prev + 1) % items.length);
+    setExpanded({}); // collapse all on auto-advance
+  }, [items.length]);
 
-  const goTo = (dir) => {
-    if (sliding || items.length === 0) return;
-    setSliding(true);
-    setTimeout(() => {
-      setCurrent((prev) =>
-        dir === "next"
-          ? (prev + 1) % items.length
-          : (prev - 1 + items.length) % items.length
-      );
-      setSliding(false);
-    }, 300);
+  const startInterval = useCallback(() => {
     clearInterval(intervalRef.current);
-  };
+    if (items.length <= 1) return;
+    intervalRef.current = setInterval(advance, INTERVAL);
+  }, [advance, items.length]);
+
+  useEffect(() => {
+    startInterval();
+    return () => clearInterval(intervalRef.current);
+  }, [startInterval]);
 
   const jumpTo = (i) => {
     if (i === current || sliding) return;
     setSliding(true);
+    setExpanded({});
     setTimeout(() => { setCurrent(i); setSliding(false); }, 300);
+    startInterval();
+  };
+
+  const handleMouseEnter = () => {
+    pausedRef.current = true;
     clearInterval(intervalRef.current);
   };
 
-  // Show 3 visible cards centered on current
+  const handleMouseLeave = () => {
+    pausedRef.current = false;
+    startInterval();
+  };
+
+  const toggleExpanded = (id) => {
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   const getVisible = () => {
     if (items.length === 0) return [];
     if (items.length <= 3) return items.map((item, i) => ({ item, i }));
@@ -133,19 +146,27 @@ export default function Menu() {
         </div>
 
         {/* Carousel */}
-        <div className="relative"
-          onMouseEnter={() => clearInterval(intervalRef.current)}
-          onMouseLeave={() => { intervalRef.current = setInterval(() => goTo("next"), 4000); }}
+        <div
+          className="relative"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
-          {/* Cards */}
-          <div className={`grid gap-8 ${visible.length === 1 ? "grid-cols-1 max-w-sm mx-auto" : visible.length === 2 ? "grid-cols-2 max-w-2xl mx-auto" : "grid-cols-1 md:grid-cols-3"} ${sliding ? "menu-carousel-sliding" : ""}`}>
+          <div className={`grid gap-8 items-start ${
+            visible.length === 1 ? "grid-cols-1 max-w-sm mx-auto"
+            : visible.length === 2 ? "grid-cols-2 max-w-2xl mx-auto"
+            : "grid-cols-1 md:grid-cols-3"
+          } ${sliding ? "menu-carousel-sliding" : ""}`}>
             {visible.map(({ item, i }, pos) => {
               const isCenter = visible.length === 3 ? pos === 1 : pos === 0;
               return (
                 <div
-                  key={item.id}
+                  key={`${pos}-${item.id}`}
                   onClick={() => jumpTo(i)}
-                  className={`menu-card group overflow-hidden rounded-lg shadow-md hover:shadow-xl cursor-pointer ${visible.length === 3 ? (isCenter ? "menu-card-center" : "menu-card-side") : "menu-card-single"}`}
+                  className={`menu-card group overflow-hidden rounded-lg shadow-md hover:shadow-xl cursor-pointer ${
+                    visible.length === 3
+                      ? (isCenter ? "menu-card-center" : "menu-card-side")
+                      : "menu-card-single"
+                  }`}
                 >
                   <div className="relative h-64 overflow-hidden">
                     {item.image_url
@@ -156,7 +177,11 @@ export default function Menu() {
                   <div className="p-6 bg-white">
                     <div className="text-sm text-gray-500 mb-2">{item.category}</div>
                     <h3 className="text-2xl mb-2 text-gray-500">{item.title}</h3>
-                    <ExpandableDesc text={item.description} />
+                    <ExpandableDesc
+                      text={item.description}
+                      expanded={!!expanded[item.id]}
+                      onToggle={() => toggleExpanded(item.id)}
+                    />
                   </div>
                 </div>
               );
@@ -172,7 +197,11 @@ export default function Menu() {
                 key={i}
                 className="dot-btn"
                 onClick={() => jumpTo(i)}
-                style={{ background: i === current ? "#374151" : "#d1d5db", width: i === current ? "24px" : "8px", borderRadius: i === current ? "4px" : "50%" }}
+                style={{
+                  background: i === current ? "#374151" : "#d1d5db",
+                  width: i === current ? "24px" : "8px",
+                  borderRadius: i === current ? "4px" : "50%"
+                }}
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
