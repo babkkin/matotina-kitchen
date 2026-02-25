@@ -1,9 +1,9 @@
 import Image from "next/image";
-import hero from "@/app/public/pictures/hero.jpg";
+import hero from "@/app/public/pictures/hero4.jpg";
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-[80vh]">
+    <section className="relative w-full" style={{ height: "calc(100vh - 56px)" }}>
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
@@ -13,7 +13,7 @@ export default function Hero() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/50"></div> {/* dark overlay */}
+        <div className="absolute inset-0 bg-black/50" />
       </div>
 
       {/* Content */}
@@ -25,7 +25,7 @@ export default function Hero() {
           Creating unforgettable culinary experiences for your special events
         </p>
         <a
-          href="#contact"
+          href="/contact"
           className="bg-white text-gray-900 font-semibold px-6 py-3 rounded shadow hover:bg-gray-100 transition"
         >
           Get a Quote
