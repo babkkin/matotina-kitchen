@@ -8,7 +8,7 @@ export default function Overview() {
         </svg>
       </div>
       <h2 className="empty-title">Dashboard / Overview</h2>
-      <p className="empty-sub">Your kitchen's at-a-glance summary will appear here.</p>
+      <p className="empty-sub">Your kitchen&apos;s at-a-glance summary will appear here.</p>
     </div>
   );
 }

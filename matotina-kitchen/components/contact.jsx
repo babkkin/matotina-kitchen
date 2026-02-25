@@ -88,7 +88,7 @@ export default function Contact() {
           <p className="text-xs font-semibold tracking-widest uppercase text-amber-600 mb-3">Catering Inquiry</p>
           <h2 className="text-4xl md:text-5xl mb-4 text-gray-700 font-light">Request a Quote</h2>
           <p className="text-lg text-gray-500 max-w-xl mx-auto">
-            Tell us about your event and we&apos;ll craft a personalized catering proposal just for you.
+            Tell us about your event and we'll craft a personalized catering proposal just for you.
           </p>
         </div>
 
@@ -138,6 +138,7 @@ export default function Contact() {
                   <Field label="Event Date" required>
                     <input type="date" id="eventDate" name="eventDate" required
                       value={formData.eventDate} onChange={handleChange}
+                      min={new Date().toISOString().split('T')[0]}
                       className={inputClass} />
                   </Field>
                   <Field label="Event Time">
@@ -224,7 +225,7 @@ export default function Contact() {
               {/* Success message */}
               {status.success && (
                 <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
-                  🎉 Thank you! Your inquiry has been submitted. We&apos;ll get back to you within 24–48 hours.
+                  🎉 Thank you! Your inquiry has been submitted. We'll get back to you within 24–48 hours.
                 </div>
               )}
 
