@@ -7,6 +7,40 @@ import AddItemModal from "@/components/admin/admin-additem";
 import EditItemModal from "@/components/admin/admin-edititem";
 import DeleteItemModal from "@/components/admin/admin-deleteitem";
 
+const DESC_LIMIT = 120;
+
+function ExpandableDesc({ text, dark = false }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text && text.length > DESC_LIMIT;
+  const displayed = isLong && !expanded ? text.slice(0, DESC_LIMIT).trimEnd() + "…" : text;
+
+  if (!text) return null;
+
+  return (
+    <p style={{
+      fontSize: dark ? "13px" : "14px",
+      color: dark ? "#6b7280" : "#6b7280",
+      lineHeight: "1.6",
+      marginBottom: dark ? "16px" : "0",
+    }}>
+      {displayed}
+      {isLong && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          style={{
+            background: "none", border: "none", cursor: "pointer",
+            fontSize: "12px", fontWeight: 600, marginLeft: "4px", padding: 0,
+            color: dark ? "#3b82f6" : "#374151",
+            textDecoration: "underline", textUnderlineOffset: "2px",
+          }}
+        >
+          {expanded ? "Less" : "More"}
+        </button>
+      )}
+    </p>
+  );
+}
+
 export default function Menu({ isAdmin = false }) {
   const [items, setItems]           = useState([]);
   const [loading, setLoading]       = useState(true);
@@ -43,12 +77,17 @@ export default function Menu({ isAdmin = false }) {
     return (
       <section id="menu" className="py-20 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 relative">
+          <div className="mb-8">
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+              Back to Home
+            </Link>
+          </div>
+          <div className="text-center mb-10">
             <h2 className="text-4xl md:text-5xl mb-4 text-gray-600">Our Menu</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">A taste of what we offer — every menu is customized for your event</p>
-            <Link href="/menu" className="absolute top-0 right-0 bg-white border border-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-full shadow-sm hover:bg-gray-100 transition">View All Menu →</Link>
           </div>
-          <div className="flex flex-wrap justify-center gap-2 mb-10">
+          <div className="flex flex-wrap justify-center gap-2 mb-16">
             {categories.map((cat) => (
               <button key={cat} onClick={() => setActiveCategory(cat)}
                 className={`px-5 py-2 rounded-full text-sm font-medium border transition ${activeCategory === cat ? "bg-gray-700 text-white border-gray-700" : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"}`}>
@@ -60,12 +99,14 @@ export default function Menu({ isAdmin = false }) {
             {filtered.map((item) => (
               <div key={item.id} className="group overflow-hidden rounded-lg shadow-md hover:shadow-xl transition">
                 <div className="relative h-64 overflow-hidden">
-                  {item.image_url ? <Image src={item.image_url} alt={item.title} fill className="object-cover group-hover:scale-110 transition duration-300" /> : <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm">No Image</div>}
+                  {item.image_url
+                    ? <Image src={item.image_url} alt={item.title} fill className="object-cover group-hover:scale-110 transition duration-300" />
+                    : <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm">No Image</div>}
                 </div>
                 <div className="p-6 bg-white">
                   <div className="text-sm text-gray-400 mb-1">{item.category}</div>
                   <h3 className="text-2xl mb-2 text-gray-600">{item.title}</h3>
-                  <p className="text-gray-500">{item.description}</p>
+                  <ExpandableDesc text={item.description} dark={false} />
                 </div>
               </div>
             ))}
@@ -142,11 +183,10 @@ export default function Menu({ isAdmin = false }) {
                 <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "18px", color: "#ffffff", marginBottom: "6px", fontWeight: 600 }}>
                   {item.title}
                 </h3>
-                <p style={{ fontSize: "13px", color: "#6b7280", lineHeight: "1.6", marginBottom: "16px" }}>
-                  {item.description}
-                </p>
 
-                <div style={{ display: "flex", gap: "8px", paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <ExpandableDesc text={item.description} dark={true} />
+
+                <div style={{ display: "flex", gap: "8px", paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: "14px" }}>
                   <button
                     onClick={() => setEditItem(item)}
                     style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", padding: "8px", background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)", color: "#93c5fd", fontSize: "11px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", borderRadius: "5px", cursor: "pointer" }}
