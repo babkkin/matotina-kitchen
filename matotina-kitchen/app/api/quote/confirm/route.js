@@ -197,18 +197,22 @@ export async function POST(req) {
     );
   }
 
+  // Coerce empty strings to null so Postgres numeric columns don't get ""
+  const toNum = (v) => (v === "" || v == null ? null : Number(v));
+  const toStr = (v) => (v === "" || v == null ? null : v);
+
   const confirmation = {
-    total_price,
-    price_breakdown,
-    deposit_amount,
-    deposit_due_date,
-    balance_amount,
-    balance_due_date,
-    cancellation_policy,
-    whats_included,
-    whats_not_included,
-    deposit_instructions,
-    contact_info,
+    total_price:         toNum(total_price),
+    price_breakdown:     toStr(price_breakdown),
+    deposit_amount:      toNum(deposit_amount),
+    deposit_due_date:    toStr(deposit_due_date),
+    balance_amount:      toNum(balance_amount),
+    balance_due_date:    toStr(balance_due_date),
+    cancellation_policy: toStr(cancellation_policy),
+    whats_included:      toStr(whats_included),
+    whats_not_included:  toStr(whats_not_included),
+    deposit_instructions: toStr(deposit_instructions),
+    contact_info:        toStr(contact_info),
   };
 
   // Save to quote_confirmations
