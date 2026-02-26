@@ -128,7 +128,7 @@ function ConfirmationModal({ quote, onClose, onSuccess }) {
               </div>
               <div>
                 <label style={labelStyle}>Deposit Due Date</label>
-                <input type="date" name="deposit_due_date" value={form.deposit_due_date} onChange={handleChange} style={inputStyle} />
+                <input type="date" name="deposit_due_date" value={form.deposit_due_date} onChange={handleChange} min={new Date().toISOString().split('T')[0]} style={inputStyle} />
               </div>
               <div>
                 <label style={labelStyle}>Balance Amount (₱)</label>
@@ -136,7 +136,7 @@ function ConfirmationModal({ quote, onClose, onSuccess }) {
               </div>
               <div>
                 <label style={labelStyle}>Balance Due Date</label>
-                <input type="date" name="balance_due_date" value={form.balance_due_date} onChange={handleChange} style={inputStyle} />
+                <input type="date" name="balance_due_date" value={form.balance_due_date} onChange={handleChange} min={new Date().toISOString().split('T')[0]} style={inputStyle} />
               </div>
             </div>
           </div>
@@ -146,13 +146,13 @@ function ConfirmationModal({ quote, onClose, onSuccess }) {
             <SectionLabel>Terms</SectionLabel>
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
-                <label style={labelStyle}>What's Included</label>
+                <label style={labelStyle}>What&apos;s Included</label>
                 <textarea name="whats_included" rows={3} value={form.whats_included} onChange={handleChange}
                   placeholder={"Setup and breakdown\nService staff\nChafing dishes and serving utensils"}
                   style={{ ...inputStyle, resize: "none" }} />
               </div>
               <div>
-                <label style={labelStyle}>What's Not Included</label>
+                <label style={labelStyle}>What&apos;s Not Included</label>
                 <textarea name="whats_not_included" rows={2} value={form.whats_not_included} onChange={handleChange}
                   placeholder={"Venue rental\nTables and chairs\nDecoration"}
                   style={{ ...inputStyle, resize: "none" }} />
@@ -467,4 +467,4 @@ export default function Reservations() {
       </div>
     </>
   );
-} 
+}
