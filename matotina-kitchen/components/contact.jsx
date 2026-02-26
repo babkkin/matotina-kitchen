@@ -88,7 +88,7 @@ export default function Contact() {
           <p className="text-xs font-semibold tracking-widest uppercase text-amber-600 mb-3">Catering Inquiry</p>
           <h2 className="text-4xl md:text-5xl mb-4 text-gray-700 font-light">Request a Quote</h2>
           <p className="text-lg text-gray-500 max-w-xl mx-auto">
-            Tell us about your event and we'll craft a personalized catering proposal just for you.
+            Tell us about your event and we&apos;ll craft a personalized catering proposal just for you.
           </p>
         </div>
 
@@ -114,10 +114,16 @@ export default function Contact() {
                       placeholder="you@email.com"
                       className={inputClass} />
                   </Field>
-                  <Field label="Phone Number" required>
+                 <Field label="Phone Number" required>
                     <input type="tel" id="phone" name="phone" required
-                      value={formData.phone} onChange={handleChange}
-                      placeholder="+63 912 345 6789"
+                      value={formData.phone}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        setFormData(prev => ({ ...prev, phone: val }));
+                      }}
+                      placeholder="09123456789"
+                      inputMode="numeric"
+                      maxLength={11}
                       className={inputClass} />
                   </Field>
                 </div>
@@ -222,10 +228,34 @@ export default function Contact() {
                 </div>
               )}
 
-              {/* Success message */}
+          {/* Success message */}
               {status.success && (
-                <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg">
-                  🎉 Thank you! Your inquiry has been submitted. We'll get back to you within 24–48 hours.
+                <div style={{
+                  position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)',
+                  zIndex: 9999, animation: 'dropIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+                  minWidth: '320px', maxWidth: '480px', width: '90vw',
+                }}>
+                  <style>{`
+                    @keyframes dropIn {
+                      from { opacity: 0; transform: translateX(-50%) translateY(-32px); }
+                      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    }
+                  `}</style>
+                  <div className="relative overflow-hidden rounded-xl border border-green-400 bg-green-600 text-white px-6 py-5 shadow-2xl">
+                    <div className="flex items-start gap-4">
+                      <div className="text-3xl leading-none">🎉</div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-base mb-1">Inquiry Submitted!</p>
+                        <p className="text-green-100 text-sm leading-relaxed">
+                          Thank you! We’ve received your request and will get back to you within 24–48 hours.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setStatus(s => ({ ...s, success: false }))}
+                        className="text-green-200 hover:text-white text-lg leading-none ml-2 mt-0.5"
+                      >✕</button>
+                    </div>
+                  </div>
                 </div>
               )}
 
