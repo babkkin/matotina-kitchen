@@ -14,18 +14,18 @@ const SECTION_TITLES = {
   reviews:      "Reviews / Feedback",
 };
 
-function renderContent(active) {
-  switch (active) {
-    case "overview":     return <Overview />;
-    case "menu":         return <MenuManagement />;
-    case "reservations": return <Reservations />;
-    case "reviews":      return <Reviews />;
-    default:             return <Overview />;
-  }
-}
-
 export default function AdminDashboard() {
   const [active, setActive] = useState("overview");
+
+  function renderContent(active) {
+    switch (active) {
+      case "overview":     return <Overview onNavigate={setActive} />;
+      case "menu":         return <MenuManagement />;
+      case "reservations": return <Reservations />;
+      case "reviews":      return <Reviews />;
+      default:             return <Overview onNavigate={setActive} />;
+    }
+  }
 
   return (
     <>
@@ -45,8 +45,6 @@ export default function AdminDashboard() {
         .topbar-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 6px rgba(34,197,94,0.6); }
         .topbar-status { font-size: 12px; color: #6b7280; letter-spacing: 0.05em; }
         .content-area { flex: 1; padding: 40px 36px; display: flex; align-items: flex-start; justify-content: flex-start; overflow-y: auto; }
-
-        /* Empty section shared styles */
         .section-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; width: 100%; padding: 80px 0; opacity: 0; animation: fadeUp 0.4s ease forwards; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .empty-icon { width: 68px; height: 68px; border-radius: 14px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); display: flex; align-items: center; justify-content: center; color: #3b82f6; margin-bottom: 6px; }
