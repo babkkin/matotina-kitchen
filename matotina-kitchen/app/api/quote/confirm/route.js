@@ -26,7 +26,7 @@ function buildEmailHtml({ quote, confirmation }) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Your Catering Quote – Matatina's Kitchen</title>
+  <title>Your Catering Quote – Matotina's Kitchen</title>
 </head>
 <body style="margin:0;padding:0;background:#f9f6f1;font-family:Georgia,serif;color:#3a2e1e;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9f6f1;padding:40px 0;">
@@ -37,7 +37,7 @@ function buildEmailHtml({ quote, confirmation }) {
           <!-- Header -->
           <tr>
             <td style="background:#7c3f00;padding:36px 40px;text-align:center;">
-              <h1 style="margin:0;color:#fff;font-size:26px;font-weight:normal;letter-spacing:1px;">Matatina's Kitchen</h1>
+              <h1 style="margin:0;color:#fff;font-size:26px;font-weight:normal;letter-spacing:1px;">Matotina's Kitchen</h1>
               <p style="margin:6px 0 0;color:#f5d9a8;font-size:13px;letter-spacing:2px;text-transform:uppercase;">Catering Quote Confirmation</p>
             </td>
           </tr>
@@ -47,7 +47,7 @@ function buildEmailHtml({ quote, confirmation }) {
             <td style="padding:36px 40px 0;">
               <p style="margin:0;font-size:16px;line-height:1.7;">Dear <strong>${fmt(quote.name)}</strong>,</p>
               <p style="margin:12px 0 0;font-size:15px;line-height:1.7;color:#5a4a3a;">
-                Thank you for choosing Matatina's Kitchen! We're excited to be part of your event.
+                Thank you for choosing Matotina's Kitchen! We're excited to be part of your event.
                 Below is your confirmed catering quote — please review everything carefully.
               </p>
             </td>
@@ -143,7 +143,7 @@ function buildEmailHtml({ quote, confirmation }) {
           <tr>
             <td style="padding:36px 40px;text-align:center;margin-top:24px;">
               <hr style="border:none;border-top:1px solid #e8ddd0;margin-bottom:24px;" />
-              <p style="margin:0;font-size:13px;color:#9a8a7a;">Matatina's Kitchen · Km. 30 National Road, Tunasan, Muntinlupa City</p>
+              <p style="margin:0;font-size:13px;color:#9a8a7a;">Matotina's Kitchen · Km. 30 National Road, Tunasan, Muntinlupa City</p>
               <p style="margin:6px 0 0;font-size:13px;color:#9a8a7a;">info@matotinaskitchen.com</p>
               <p style="margin:16px 0 0;font-size:12px;color:#b8a898;font-style:italic;">We look forward to making your event unforgettable.</p>
             </td>
@@ -235,7 +235,7 @@ export async function POST(req) {
     await transporter.sendMail({
       from: process.env.GMAIL_FROM,
       to: quote.email,
-      subject: `Your Catering Quote is Confirmed – Matatina's Kitchen`,
+      subject: `Your Catering Quote is Confirmed – Matotina's Kitchen`,
       html: buildEmailHtml({ quote, confirmation }),
     });
   } catch (emailError) {
