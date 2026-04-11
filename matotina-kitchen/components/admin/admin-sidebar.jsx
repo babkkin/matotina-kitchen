@@ -82,7 +82,7 @@ export default function Sidebar({ active, onNavigate }) {
       <aside className="sidebar">
         <div className="sidebar-logo">
           <div className="sidebar-logo-badge">Admin Panel</div>
-          <div className="sidebar-logo-title">Matotina's Kitchen</div>
+          <div className="sidebar-logo-title">Matotina&apos;s Kitchen</div>
         </div>
 
         <nav className="sidebar-nav">

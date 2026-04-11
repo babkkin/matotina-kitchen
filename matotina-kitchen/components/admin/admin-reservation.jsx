@@ -48,6 +48,8 @@ function StatusBadge({ status }) {
   );
 }
 
+
+
 const inputStyle = {
   width: "100%", padding: "10px 12px", fontSize: "13px",
   background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
@@ -207,8 +209,96 @@ function ConfirmationModal({ quote, onClose, onSuccess }) {
   );
 }
 
+
+// Add this new modal component before RowActionsModal
+
+function ViewQuoteModal({ quote, onClose }) {
+  const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      const res = await fetch(`/api/quote/confirm?quote_id=${quote.id}`);
+      const data = await res.json();
+      if (!res.ok) setError(data.message || "Failed to load quote details.");
+      else setDetails(data);
+      setLoading(false);
+    };
+    fetchDetails();
+  }, [quote.id]);
+
+  const SectionLabel = ({ children }) => (
+    <p style={{ fontSize: "11px", fontWeight: 600, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "16px", paddingBottom: "8px", borderBottom: "1px solid rgba(139,92,246,0.2)" }}>
+      {children}
+    </p>
+  );
+
+  const Field = ({ label, value }) => value ? (
+    <div style={{ marginBottom: "16px" }}>
+      <p style={{ ...labelStyle, marginBottom: "6px" }}>{label}</p>
+      <p style={{ fontSize: "13px", color: "#d1d5db", whiteSpace: "pre-line", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", padding: "10px 12px" }}>{value}</p>
+    </div>
+  ) : null;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", padding: "16px" }}>
+      <div style={{ background: "#0f0f17", border: "1px solid rgba(255,255,255,0.08)", width: "100%", maxWidth: "640px", maxHeight: "90vh", overflowY: "auto" }}>
+
+        {/* Header */}
+        <div style={{ padding: "28px 32px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", position: "sticky", top: 0, background: "#0f0f17", zIndex: 10 }}>
+          <div>
+            <p style={{ fontSize: "11px", fontWeight: 600, color: "#10b981", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "6px" }}>✓ Confirmed Quote Details</p>
+            <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "20px", fontWeight: 700, color: "#ffffff" }}>{quote.name}</h2>
+            <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>{quote.event_type} · {formatDate(quote.event_date)}</p>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#6b7280", fontSize: "20px", cursor: "pointer", lineHeight: 1 }}>✕</button>
+        </div>
+
+        <div style={{ padding: "32px" }}>
+          {loading && <p style={{ color: "#6b7280", fontSize: "13px" }}>Loading quote details...</p>}
+          {error && <p style={{ color: "#f87171", fontSize: "13px" }}>{error}</p>}
+          {details && (
+            <>
+              <div style={{ marginBottom: "32px" }}>
+                <SectionLabel>The Quote</SectionLabel>
+                <Field label="Total Price" value={details.total_price ? `₱${Number(details.total_price).toLocaleString()}` : null} />
+                <Field label="Price Breakdown" value={details.price_breakdown} />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                  <Field label="Deposit Amount" value={details.deposit_amount ? `₱${Number(details.deposit_amount).toLocaleString()}` : null} />
+                  <Field label="Deposit Due Date" value={details.deposit_due_date ? formatDate(details.deposit_due_date) : null} />
+                  <Field label="Balance Amount" value={details.balance_amount ? `₱${Number(details.balance_amount).toLocaleString()}` : null} />
+                  <Field label="Balance Due Date" value={details.balance_due_date ? formatDate(details.balance_due_date) : null} />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "32px" }}>
+                <SectionLabel>Terms</SectionLabel>
+                <Field label="What's Included" value={details.whats_included} />
+                <Field label="What's Not Included" value={details.whats_not_included} />
+                <Field label="Cancellation Policy" value={details.cancellation_policy} />
+              </div>
+
+              <div style={{ marginBottom: "32px" }}>
+                <SectionLabel>Next Steps</SectionLabel>
+                <Field label="Deposit Payment Instructions" value={details.deposit_instructions} />
+                <Field label="Contact Info for Questions" value={details.contact_info} />
+              </div>
+            </>
+          )}
+
+          <button onClick={onClose}
+            style={{ width: "100%", padding: "12px", fontSize: "13px", color: "#9ca3af", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", fontFamily: "'Inter', sans-serif", fontWeight: 500 }}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Row Actions Modal ──────────────────────────────────────────────────────────
-function RowActionsModal({ quote, onClose, onStatusChange, onConfirm, updating }) {
+function RowActionsModal({ quote, onClose, onStatusChange, onConfirm, onViewQuote, updating }) {
   const nextStatuses = NEXT_STATUSES[quote.status] || [];
   const statusMeta = STATUSES.find(s => s.key === quote.status);
 
@@ -263,6 +353,26 @@ function RowActionsModal({ quote, onClose, onStatusChange, onConfirm, updating }
                     </button>
                   );
                 })}
+                
+                  {quote.status === "confirmed" && (
+                    <button
+                      onClick={() => { onViewQuote(quote); onClose(); }}
+                      style={{
+                        width: "100%", padding: "14px 18px", marginBottom: "10px",
+                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                        fontSize: "13px", fontWeight: 500, cursor: "pointer",
+                        fontFamily: "'Inter', sans-serif",
+                        background: "rgba(245, 157, 39, 0.1)", border: "1px solid rgba(245, 157, 39, 0.3)",
+                        color: "rgba(245, 157, 39, 0.8)",
+                      }}
+                    >
+                      <span>📄 View Sent Quote</span>
+                      <span style={{ opacity: 0.5, fontSize: "16px" }}>→</span>
+                    </button>
+                  )}
+                                  
+
+                
               </div>
             </>
           ) : (
@@ -275,6 +385,7 @@ function RowActionsModal({ quote, onClose, onStatusChange, onConfirm, updating }
           >
             Close
           </button>
+          
         </div>
       </div>
     </div>
@@ -290,6 +401,7 @@ export default function Reservations() {
   const [filterStatus, setFilterStatus] = useState("new");
   const [confirmingQuote, setConfirmingQuote] = useState(null);
   const [actionsQuote, setActionsQuote] = useState(null);
+  const [viewingQuote, setViewingQuote] = useState(null);
 
   const fetchQuotes = async () => {
     const res = await fetch("/api/quote/list");
@@ -348,7 +460,15 @@ export default function Reservations() {
           onClose={() => setActionsQuote(null)}
           onStatusChange={handleStatusChange}
           onConfirm={setConfirmingQuote}
+          onViewQuote={setViewingQuote}
           updating={updating}
+        />
+      )}
+
+      {viewingQuote && (
+        <ViewQuoteModal
+          quote={viewingQuote}
+          onClose={() => setViewingQuote(null)}
         />
       )}
 

@@ -251,3 +251,33 @@ export async function POST(req) {
     { status: 200 }
   );
 }
+
+// Add this to the bottom of your existing confirm/route.js
+
+// GET /api/quote/confirm?quote_id=...
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const quote_id = searchParams.get("quote_id");
+
+  if (!quote_id) {
+    return new Response(
+      JSON.stringify({ message: "quote_id is required." }),
+      { status: 400 }
+    );
+  }
+
+  const { data, error } = await supabase
+    .from("quote_confirmations")
+    .select("*")
+    .eq("quote_id", quote_id)
+    .single();
+
+  if (error || !data) {
+    return new Response(
+      JSON.stringify({ message: "Confirmation not found." }),
+      { status: 404 }
+    );
+  }
+
+  return new Response(JSON.stringify(data), { status: 200 });
+}
