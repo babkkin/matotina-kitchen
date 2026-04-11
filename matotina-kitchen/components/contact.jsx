@@ -387,8 +387,8 @@ const CONTACT_ITEMS = [
     icon: Mail,
     label: "Email",
     content: (
-      <a href="mailto:info@matotinaskitchen.com" className="hover:text-amber-700 transition-colors break-all">
-        info@matotinaskitchen.com
+      <a href="mailto:matotina1393@gmail.com" className="hover:text-amber-700 transition-colors break-all">
+        matotina1393@gmail.com
       </a>
     ),
   },
