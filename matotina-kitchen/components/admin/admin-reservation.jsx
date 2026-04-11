@@ -181,7 +181,7 @@ function ConfirmationModal({ quote, onClose, onSuccess }) {
               <div>
                 <label style={labelStyle}>Contact Info for Questions</label>
                 <textarea name="contact_info" rows={2} value={form.contact_info} onChange={handleChange}
-                  placeholder={"Call or text: 09XX XXX XXXX\nEmail: info@matotinaskitchen.com"}
+                  placeholder={"Call or text: 09XX XXX XXXX\nEmail: matotina1393@gmail.com"}
                   style={{ ...inputStyle, resize: "none" }} />
               </div>
             </div>

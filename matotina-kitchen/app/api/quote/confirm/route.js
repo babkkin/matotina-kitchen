@@ -144,7 +144,7 @@ function buildEmailHtml({ quote, confirmation }) {
             <td style="padding:36px 40px;text-align:center;margin-top:24px;">
               <hr style="border:none;border-top:1px solid #e8ddd0;margin-bottom:24px;" />
               <p style="margin:0;font-size:13px;color:#9a8a7a;">Matotina's Kitchen · Km. 30 National Road, Tunasan, Muntinlupa City</p>
-              <p style="margin:6px 0 0;font-size:13px;color:#9a8a7a;">info@matotinaskitchen.com</p>
+              <p style="margin:6px 0 0;font-size:13px;color:#9a8a7a;">matotina1393@gmail.com</p>
               <p style="margin:16px 0 0;font-size:12px;color:#b8a898;font-style:italic;">We look forward to making your event unforgettable.</p>
             </td>
           </tr>
