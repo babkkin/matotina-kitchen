@@ -97,16 +97,18 @@ ${menuCatalog}
 Based on the event details and the available menu above, suggest a well-balanced catering package.
 
 Rules:
-- Only use dishes from the list above, using their exact titles
-- Scale the number of dishes to the guest count and event duration
-- For buffet: suggest 2–3 proteins, 1–2 vegetables, 1–2 rice or carb options, 1 soup, 1–2 desserts
-- For plated/sit-down: suggest 1 starter, 1 main, 1 side, 1 dessert
-- For cocktail/stations: suggest bite-sized or station-style items from the list
-- Respect dietary restrictions — skip or flag dishes that conflict
-- Respect the cuisine preference when choosing between available options
-- Do not include pricing
-- Do not use markdown # headers — use plain labels like "PROTEINS:", "DESSERTS:", etc.
-- End with a short warm note that this is a suggestion and can be adjusted
+- Only use dishes from the list above, using their exact titles. Do not invent, rename, or modify any dish.
+- Use ONLY the exact category names shown in the AVAILABLE MENU. Do not assume, translate, or create categories.
+- Organize dishes under their original categories exactly as they appear in the AVAILABLE MENU.
+- Include only categories that have selected dishes.
+- Scale the number of dishes to the guest count, event duration, and service style.
+- Do not attempt to map categories into roles like proteins, vegetables, rice, soup, or desserts.
+- Respect dietary restrictions — skip dishes that conflict and do not replace them with new ones.
+- Respect the cuisine preference when choosing between available options.
+- Do not include pricing.
+- Do not use markdown # headers — only use the exact category names followed by a colon.
+- If a category ends up empty after filtering, omit it completely (do not rename or replace it).
+- End with a short warm note that the menu is a suggestion and can be adjusted.
 
 If the available menu does not have enough suitable items for a category, say so honestly rather than inventing dishes.
 `.trim();
