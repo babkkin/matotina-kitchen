@@ -9,6 +9,8 @@ const STATUSES = [
   { key: "cancelled", label: "Cancelled", color: "#6b7280", bg: "rgba(107,114,128,0.15)", text: "#9ca3af"  },
 ];
 
+
+
 const NEXT_STATUSES = {
   new:       ["contacted", "cancelled"],
   contacted: ["confirmed", "cancelled"],
@@ -61,6 +63,93 @@ const labelStyle = {
   display: "block", fontSize: "11px", fontWeight: 600,
   color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "6px",
 };
+
+// ── View Inquiry Modal ─────────────────────────────────────────────────────────
+
+function ViewInquiryModal({ quote, onClose }) {
+  const SectionLabel = ({ children }) => (
+    <p style={{ fontSize: "11px", fontWeight: 600, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "16px", paddingBottom: "8px", borderBottom: "1px solid rgba(59,130,246,0.2)" }}>
+      {children}
+    </p>
+  );
+
+  const Field = ({ label, value }) => value ? (
+    <div style={{ marginBottom: "14px" }}>
+      <p style={{ ...labelStyle, marginBottom: "4px" }}>{label}</p>
+      <p style={{ fontSize: "13px", color: "#d1d5db", whiteSpace: "pre-line", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", padding: "10px 12px" }}>{value}</p>
+    </div>
+  ) : null;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", padding: "16px" }}>
+      <div style={{ background: "#0f0f17", border: "1px solid rgba(255,255,255,0.08)", width: "100%", maxWidth: "640px", maxHeight: "90vh", overflowY: "auto" }}>
+
+        {/* Header */}
+        <div style={{ padding: "28px 32px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", position: "sticky", top: 0, background: "#0f0f17", zIndex: 10 }}>
+          <div>
+            <p style={{ fontSize: "11px", fontWeight: 600, color: "#3b82f6", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "6px" }}>Inquiry Details</p>
+            <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "20px", fontWeight: 700, color: "#ffffff" }}>{quote.name}</h2>
+            <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>{quote.event_type} · {formatDate(quote.event_date)}</p>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "#6b7280", fontSize: "20px", cursor: "pointer", lineHeight: 1 }}>✕</button>
+        </div>
+
+        <div style={{ padding: "32px" }}>
+
+          {/* Client */}
+          <div style={{ marginBottom: "28px" }}>
+            <SectionLabel>Client Info</SectionLabel>
+            <Field label="Name" value={quote.name} />
+            <Field label="Email" value={quote.email} />
+            <Field label="Phone" value={quote.phone} />
+            <Field label="Returning Client?" value={quote.is_returning_client} />
+            <Field label="Referral" value={quote.referral} />
+            <Field label="Competing Quotes?" value={quote.competing_quotes} />
+          </div>
+
+          {/* Event */}
+          <div style={{ marginBottom: "28px" }}>
+            <SectionLabel>Event Details</SectionLabel>
+            <Field label="Event Type" value={quote.event_type} />
+            <Field label="Event Date" value={formatDate(quote.event_date)} />
+            <Field label="Event Time" value={quote.event_time} />
+            <Field label="Event Duration" value={quote.event_duration} />
+            <Field label="Venue" value={quote.venue} />
+            <Field label="Venue Type" value={quote.venue_type} />
+            <Field label="Number of Guests" value={quote.guests?.toString()} />
+            <Field label="Budget Range" value={quote.budget_range} />
+          </div>
+
+          {/* Service */}
+          <div style={{ marginBottom: "28px" }}>
+            <SectionLabel>Service & Food</SectionLabel>
+            <Field label="Service Type" value={quote.service_type} />
+            <Field label="Cuisine Style" value={quote.cuisine_style} />
+            <Field label="Menu Preferences" value={quote.menu_preferences} />
+            <Field label="Dietary Notes" value={quote.dietary_notes} />
+            <Field label="Staffing" value={quote.staffing} />
+          </div>
+
+          {/* AI & Notes */}
+          <div style={{ marginBottom: "28px" }}>
+            <SectionLabel>Additional Info</SectionLabel>
+            <Field label="AI Menu Suggestion" value={quote.ai_menu} />
+            <Field label="Notes" value={quote.notes} />
+          </div>
+
+          <p style={{ fontSize: "11px", color: "#4b5563", marginBottom: "20px" }}>
+            Submitted {formatDate(quote.created_at)}
+          </p>
+
+          <button onClick={onClose}
+            style={{ width: "100%", padding: "12px", fontSize: "13px", color: "#9ca3af", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer", fontFamily: "'Inter', sans-serif", fontWeight: 500 }}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ── Confirmation Modal ─────────────────────────────────────────────────────────
 function ConfirmationModal({ quote, onClose, onSuccess }) {
@@ -320,6 +409,10 @@ function RowActionsModal({ quote, onClose, onStatusChange, onConfirm, onViewQuot
           </div>
         </div>
 
+
+
+        
+
         {/* Actions */}
         <div style={{ padding: "28px 32px" }}>
           {nextStatuses.length > 0 ? (
@@ -402,6 +495,7 @@ export default function Reservations() {
   const [confirmingQuote, setConfirmingQuote] = useState(null);
   const [actionsQuote, setActionsQuote] = useState(null);
   const [viewingQuote, setViewingQuote] = useState(null);
+  const [viewingInquiry, setViewingInquiry] = useState(null);
 
   const fetchQuotes = async () => {
     const res = await fetch("/api/quote/list");
@@ -446,6 +540,14 @@ export default function Reservations() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@600;700&display=swap');
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
+
+
+      {viewingInquiry && (
+          <ViewInquiryModal
+            quote={viewingInquiry}
+            onClose={() => setViewingInquiry(null)}
+          />
+        )}
 
       {confirmingQuote && (
         <ConfirmationModal
@@ -563,21 +665,35 @@ export default function Reservations() {
                     <td style={{ padding: "18px 20px", verticalAlign: "top", color: "#6b7280", fontSize: "12px", whiteSpace: "nowrap" }}>
                       {formatDate(quote.created_at)}
                     </td>
-                    <td style={{ padding: "18px 20px", verticalAlign: "top", textAlign: "right" }}>
-                      {NEXT_STATUSES[quote.status]?.length > 0 && (
-                        <button
-                          onClick={() => setActionsQuote(quote)}
-                          style={{
-                            padding: "7px 14px", fontSize: "11px", fontWeight: 500,
-                            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                            color: "#9ca3af", cursor: "pointer", fontFamily: "'Inter', sans-serif",
-                            letterSpacing: "0.06em", textTransform: "uppercase",
-                          }}
-                        >
-                          Actions
-                        </button>
-                      )}
-                    </td>
+<td style={{ padding: "18px 20px", verticalAlign: "top" }}>
+  <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+    <button
+      onClick={() => setViewingInquiry(quote)}
+      style={{
+        padding: "7px 14px", fontSize: "11px", fontWeight: 500,
+        background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)",
+        color: "#93c5fd", cursor: "pointer", fontFamily: "'Inter', sans-serif",
+        letterSpacing: "0.06em", textTransform: "uppercase",
+      }}
+    >
+      View
+    </button>
+
+    {NEXT_STATUSES[quote.status]?.length > 0 && (
+      <button
+        onClick={() => setActionsQuote(quote)}
+        style={{
+          padding: "7px 14px", fontSize: "11px", fontWeight: 500,
+          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+          color: "#9ca3af", cursor: "pointer", fontFamily: "'Inter', sans-serif",
+          letterSpacing: "0.06em", textTransform: "uppercase",
+        }}
+      >
+        Actions
+      </button>
+    )}
+  </div>
+</td>
                   </tr>
                 ))}
               </tbody>
